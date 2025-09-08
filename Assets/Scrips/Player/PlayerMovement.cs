@@ -6,12 +6,10 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Vector2 moveInput;
-    private PlayerStats stats;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        stats = GetComponent<PlayerStats>();
     }
 
     void Update()
@@ -32,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        float moveSpeed = stats.MoveSpeed * stats.SpeedMultiplier;
+        float moveSpeed = PlayerStats.Instance.MoveSpeed * PlayerStats.Instance.SpeedMultiplier;
         rb.linearVelocity = moveInput * moveSpeed;
     }
 }

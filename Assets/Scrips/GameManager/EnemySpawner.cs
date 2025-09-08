@@ -2,7 +2,7 @@
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private GameObject[] enemyPrefabs;  // danh sách quái
     [SerializeField] private int maxEnemies = 20;
     [SerializeField] private Transform player;
     [SerializeField] private float minSpawnDistance = 20f;
@@ -10,8 +10,11 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
-        // Tạo pool sẵn
-        EnemyPoolManager.Instance.CreatePool(enemyPrefab, maxEnemies);
+        // Tạo pool cho từng loại quái
+        foreach (var prefab in enemyPrefabs)
+        {
+            EnemyPoolManager.Instance.CreatePool(prefab, maxEnemies);
+        }
     }
 
     private void Update()
@@ -30,20 +33,25 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        if (player == null || enemyPrefab == null) return;
+        if (player == null || enemyPrefabs == null || enemyPrefabs.Length == 0) return;
 
+        // chọn ngẫu nhiên prefab quái
+        GameObject selectedPrefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
+
+        // chọn vị trí spawn ngẫu nhiên quanh player
         Vector2 randomDirection = Random.insideUnitCircle.normalized;
         float randomDistance = Random.Range(minSpawnDistance, maxSpawnDistance);
         Vector2 spawnPosition = (Vector2)player.position + randomDirection * randomDistance;
 
-        GameObject enemyObj = EnemyPoolManager.Instance.GetObject(enemyPrefab);
+        // lấy quái từ pool
+        GameObject enemyObj = EnemyPoolManager.Instance.GetObject(selectedPrefab);
         enemyObj.transform.position = spawnPosition;
         enemyObj.transform.rotation = Quaternion.identity;
 
         BaseEnemy enemy = enemyObj.GetComponent<BaseEnemy>();
         if (enemy != null)
         {
-            enemy.Init(enemyPrefab);
+            enemy.Init(selectedPrefab); // truyền prefab gốc để biết loại
             EnemyManager.Instance.RegisterEnemy(enemy);
         }
     }

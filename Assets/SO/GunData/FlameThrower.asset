@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87e13f529d5fe4549993ff211421ef7a, type: 3}
+  m_Name: FlameThrower
+  m_EditorClassIdentifier: 
+  weaponID: FlameThrower
+  cooldown: 0.1
+  maxLevel: 5
+  damagePerShot: 5
+  attackRadius: 7
+  coneAngle: 60
+  targetingStrategyID: ClosestEnemy
+  effectPrefab: {fileID: 6693658017530370735, guid: d72d9563908706c4696586bfd5eaa322, type: 3}
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 256

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+
 public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager Instance;
@@ -42,7 +43,17 @@ public class EnemyManager : MonoBehaviour
         // ✅ Chỉ EnemyManager điều khiển di chuyển
         for (int i = 0; i < activeEnemies.Count; i++)
         {
-            activeEnemies[i].DoMove();
+            BaseEnemy enemy = activeEnemies[i];
+            enemy.DoMove();
+            if (enemy.flashCouter > 0)
+            {
+                enemy.spriteRenderer.color = Color.red;
+                enemy.flashCouter -= Time.deltaTime;
+            }
+            else
+            {
+                enemy.spriteRenderer.color = Color.white;
+            }
         }
     }
 }

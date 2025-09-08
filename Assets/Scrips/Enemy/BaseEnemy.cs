@@ -6,7 +6,13 @@ public abstract class BaseEnemy : MonoBehaviour
     [SerializeField] protected float currentHealth;
     [SerializeField] protected float moveSpeed = 2f;
     public float damage = 10f;
+    public int expDrop = 10;
     protected Rigidbody2D rb;
+
+    public SpriteRenderer spriteRenderer;
+    public float flashtime = 0.1f;
+    public float flashCouter = 0;
+
 
     private GameObject originPrefab; // lưu prefab để return đúng pool
 
@@ -25,11 +31,17 @@ public abstract class BaseEnemy : MonoBehaviour
 
     public virtual void TakeDamage(float dmg)
     {
-        currentHealth -= dmg;
+        currentHealth -= dmg * PlayerStats.Instance.DamageMultiplier;
+        flashCouter = flashtime;
+        
         if (currentHealth <= 0)
         {
             Die();
         }
+    }
+    public void DropOrb()
+    {
+        OrbPool.Instance.GetOrb(transform.position, expDrop);
     }
 
     protected abstract void Move();
@@ -38,7 +50,10 @@ public abstract class BaseEnemy : MonoBehaviour
     {
         EnemyManager.Instance.UnregisterEnemy(this);
         if (originPrefab != null)
+        {
+            DropOrb();
             EnemyPoolManager.Instance.ReturnObject(originPrefab, gameObject);
+        }
         else
             Destroy(gameObject); // fallback
     }

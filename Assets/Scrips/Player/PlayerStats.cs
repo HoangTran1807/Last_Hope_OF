@@ -3,6 +3,21 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerStats : MonoBehaviour
 {
+    public static PlayerStats Instance { get; private set; }
+
+    private void Awake()
+    {
+
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     [Header("Health")]
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float currentHealth = 100f;
@@ -13,7 +28,7 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private float damageMultiplier = 1f;
     [SerializeField] private float fireRateMultiplier = 1f;
     [SerializeField] private float areaMultiplier = 1f;
-    [SerializeField] private int projectileAmount = 1;    
+    [SerializeField] private int projectileAmount = 1;
     [SerializeField] private float pickupRange = 2f;
 
     [Header("Defense")]

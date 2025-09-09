@@ -1,4 +1,4 @@
-using TMPro;
+Ôªøusing TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,7 +20,7 @@ public class UpgradeOptionUI : MonoBehaviour
         descText.text = data.description;
     }
 
-    // H‡m n‡y s? ???c g?i khi click v‡o panel
+    // H√†m n√†y s? ???c g?i khi click v√†o panel
     public void OnClick()
     {
         if (upgradeData == null) return;

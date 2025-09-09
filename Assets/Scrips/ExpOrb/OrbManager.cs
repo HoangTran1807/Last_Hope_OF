@@ -8,6 +8,8 @@ public class OrbManager : MonoBehaviour
 
     private List<EXPOrb> orbs = new List<EXPOrb>();
 
+    [SerializeField] private Transform player; 
+
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -26,6 +28,19 @@ public class OrbManager : MonoBehaviour
 
     void Update()
     {
+        // Nếu số lượng orb > 50 thì hút toàn bộ về player
+        if (player != null && orbs.Count > 50)
+        {
+            foreach (var orb in orbs)
+            {
+                if (orb != null)
+                {
+                    orb.isMoving = true;
+                    orb.targetPlayer = player;
+                }
+            }
+        }
+
         for (int i = 0; i < orbs.Count; i++)
         {
             EXPOrb orb = orbs[i];
@@ -38,6 +53,7 @@ public class OrbManager : MonoBehaviour
                 );
             }
         }
+
         CheckOrbMerge();
     }
 
@@ -51,12 +67,10 @@ public class OrbManager : MonoBehaviour
 
                 float dist = Vector3.Distance(orbs[i].transform.position, orbs[j].transform.position);
 
-                // bán kính merge dựa vào orb lớn hơn
                 float mergeRadius = Mathf.Max(orbs[i].GetMergeRadius(), orbs[j].GetMergeRadius());
 
                 if (dist < mergeRadius)
                 {
-                    // cho orb lớn hơn nuốt orb nhỏ hơn
                     if (orbs[i].expAmount >= orbs[j].expAmount)
                         orbs[i].MergeWith(orbs[j]);
                     else
@@ -65,6 +79,4 @@ public class OrbManager : MonoBehaviour
             }
         }
     }
-
-
 }

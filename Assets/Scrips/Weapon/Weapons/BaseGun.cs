@@ -27,7 +27,8 @@ public class BaseGun : BaseWeapon
             bulletPrefab   = gunData.bulletPrefab;
             damage         = gunData.damage;
             bulletSpeed    = gunData.bulletSpeed;
-            cooldown       = gunData.cooldown;   // từ BaseWeapon
+            cooldown       = gunData.cooldown;
+            upgradeable    = gunData.upgradeable;
             bulletsPerShot = gunData.bulletsPerShot;
             spreadAngle    = gunData.spreadAngle;
             accuracy       = gunData.accuracy;
@@ -35,8 +36,6 @@ public class BaseGun : BaseWeapon
             maxLevel       = gunData.maxLevel;
             weaponID       = gunData.weaponID;
             targetingStrategyID = gunData.targetingStrategyID;
-
-
         }
     }
 

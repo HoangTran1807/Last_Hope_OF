@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1591ebee31fc45a41aae36a798189303, type: 3}
-  m_Name: moveSpeed
+  m_Name: UnlockRifle
   m_EditorClassIdentifier: 
-  upgradeName: Speed
-  description: 
-  category: 1
+  upgradeName: Rifle
+  description: "m\u1EDF kh\xF3a s\xFAng tr\u01B0\u1EDDng"
+  isWeaponUpgrade: 1
   maxLevel: 5
-  icon: {fileID: 21300000, guid: f8ff5a7c21bb3404787913cea1103ed4, type: 3}
-  upgradeType: 7
-  value: 0.1
+  icon: {fileID: 21300000, guid: 7c95719b98eebd24b887fc3f66686c83, type: 3}
+  upgradeType: 0
+  value: 0

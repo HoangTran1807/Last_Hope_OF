@@ -1,27 +1,46 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UpgradeManager : MonoBehaviour
 {
     public static UpgradeManager Instance;
 
+    [Header("Starting Upgrades")]
+    [SerializeField] private List<UpgradeData> startingUnlocks;
+
     [Header("All Available Upgrades")]
-    [SerializeField] private List<UpgradeData> allUpgrades; // gán sẵn trong Inspector
+    [SerializeField] private List<UpgradeData> allUpgrades;
 
     [Header("Upgrade Settings")]
     [SerializeField] private int choiceCount = 3;
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+            InitializeUpgrades();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void InitializeUpgrades()
+    {
+        allUpgrades = new List<UpgradeData>();
+
+        // Load các nâng cấp chỉ số người chơi từ Resources
+        List<UpgradeData> playerUpgrades = Resources.LoadAll<UpgradeData>("Upgrades/Player").ToList();
+
+        allUpgrades.AddRange(startingUnlocks); // vũ khí khởi tạo
+        allUpgrades.AddRange(playerUpgrades);  // nâng cấp nội tại
     }
 
     /// <summary>
-    /// Sinh ra danh sách các nâng cấp khả dụng theo logic:
-    /// - Nếu player chưa đủ súng: có thể random vũ khí mới hoặc nâng cấp vũ khí đang có
-    /// - Nếu đã full súng: chỉ random nâng cấp vũ khí đang có
-    /// - Nếu vũ khí max level: bỏ qua
-    /// - Nếu không còn upgrade nào hợp lệ => trả về rỗng
+    /// Sinh ra danh sách các nâng cấp khả dụng
     /// </summary>
     public List<UpgradeData> GetUpgradeChoices()
     {
@@ -29,52 +48,71 @@ public class UpgradeManager : MonoBehaviour
 
         foreach (var upgrade in allUpgrades)
         {
-            if (upgrade.isWeaponUpgrade)
+            switch (upgrade.category)
             {
-                // 1. Đã có súng này
-                if (PlayerWeaponManager.Instance.HasWeapon(upgrade.upgradeName))
-                {
-                    if (PlayerWeaponManager.Instance.CanUpgrade(upgrade.upgradeName))
+                case UpgradeCategory.Weapon_Upgrade:
+                    if (PlayerWeaponManager.Instance.HasWeapon(upgrade.upgradeName))
+                    {
+                        // Vũ khí đã có -> chỉ lấy upgrade nếu chưa max level
+                        if (PlayerWeaponManager.Instance.CanUpgrade(upgrade.upgradeName))
+                            validUpgrades.Add(upgrade);
+                    }
+                    else
+                    {
+                        // Vũ khí chưa có -> chỉ hợp lệ nếu chưa đầy slot
+                        if (!PlayerWeaponManager.Instance.IsWeaponFull())
+                            validUpgrades.Add(upgrade);
+                    }
+                    break;
+
+                case UpgradeCategory.Player_Upgrade:
+                    if (PlayerUpgradeManager.Instance.CanUpgrade(upgrade))
                         validUpgrades.Add(upgrade);
-                }
-                else
-                {
-                    // 2. Chưa có súng này
-                    if (!PlayerWeaponManager.Instance.IsWeaponFull())
-                        validUpgrades.Add(upgrade);
-                }
-            }
-            else
-            {
-                // 3. Nâng cấp nội tại (player stats)
-                validUpgrades.Add(upgrade);
+                    break;
             }
         }
 
-        // Shuffle danh sách để random
+        // Shuffle
         Shuffle(validUpgrades);
 
-        // Lấy số lượng theo choiceCount
-        List<UpgradeData> result = new List<UpgradeData>();
-        for (int i = 0; i < Mathf.Min(choiceCount, validUpgrades.Count); i++)
-        {
-            result.Add(validUpgrades[i]);
-        }
-
-        return result;
+        // Chọn ra số lượng giới hạn
+        return validUpgrades.Take(choiceCount).ToList();
     }
 
     /// <summary>
-    /// Người chơi chọn upgrade trong danh sách
+    /// Áp dụng upgrade được chọn
     /// </summary>
     public void ApplyUpgrade(UpgradeData upgrade)
     {
-        Debug.Log("appline upgrade");
         if (upgrade == null) return;
-        PlayerWeaponManager.Instance.ApplyUpgrade(upgrade);
+
+        switch (upgrade.category)
+        {
+            case UpgradeCategory.Weapon_Upgrade:
+                bool isNewWeapon = !PlayerWeaponManager.Instance.HasWeapon(upgrade.upgradeName);
+
+                PlayerWeaponManager.Instance.ApplyUpgrade(upgrade);
+
+                if (isNewWeapon)
+                {
+                    var newGunPrefab = Resources.Load<BaseWeapon>($"Weapons/{upgrade.upgradeName}");
+                    if (newGunPrefab != null)
+                    {
+                        // Xóa unlock ban đầu
+                        allUpgrades.Remove(upgrade);
+
+                        // Thêm các upgrade tiếp theo của vũ khí này
+                        allUpgrades.AddRange(newGunPrefab.upgradeable);
+                    }
+                }
+                break;
+
+            case UpgradeCategory.Player_Upgrade:
+                // Apply upgrade vào player stats
+                PlayerUpgradeManager.Instance.ApplyUpgrade(upgrade);
+                break;
+        }
     }
-
-
 
     // Fisher-Yates shuffle
     private void Shuffle<T>(List<T> list)

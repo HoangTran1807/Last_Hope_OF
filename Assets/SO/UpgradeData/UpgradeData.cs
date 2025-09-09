@@ -1,33 +1,43 @@
 ﻿using UnityEngine;
+
 public enum UpgradeCategory
 {
-    Weapon_New,   // Mở thêm vũ khí mới
-    Weapon_Upgrade, // Nâng cấp vũ khí đang có
-    Player_Upgrade  // Nâng cấp nội tại (HP, Speed, EXP gain…)
+    Weapon_Upgrade,   // Nâng cấp vũ khí
+    Player_Upgrade    // Nâng cấp chỉ số người chơi (HP, Speed, EXP, ...)
 }
 
 public enum UpgradeType
 {
+    // ==== Weapon related ====
     Damage,
     FireRate,
     Accuracy,
     Projectile,
     ConeAngle,
-    Range
-}
+    Range,
 
+    // ==== Player stats ====
+    MaxHealth,
+    MoveSpeed,
+    PickupRange,
+    Armor,
+    Regen,
+    CritChance,
+    CritDamage,
+    ExpGain
+}
 
 [CreateAssetMenu(fileName = "UpgradeData", menuName = "Upgrades/New Upgrade")]
 public class UpgradeData : ScriptableObject
 {
     [Header("General Info")]
-    public string upgradeName;          // tên vũ khí hoặc nâng cấp
-    public string description;          // mô tả nâng cấp
-    public bool isWeaponUpgrade;        // true = vũ khí, false = nâng cấp nội tại
-    public int maxLevel = 5;
+    public string upgradeName;          // Tên vũ khí hoặc tên nâng cấp
+    public string description;          // Mô tả
+    public UpgradeCategory category;    // Loại nâng cấp
+    public int maxLevel = 5;            // Giới hạn cấp độ
     public Sprite icon;
 
     [Header("Effect")]
-    public UpgradeType upgradeType;
-    public float value;                 // giá trị tăng (damage +x, fireRate *factor, ...)
+    public UpgradeType upgradeType;     // Tác động đến chỉ số nào
+    public float value;                 // Giá trị tăng mỗi cấp (HP +x, Speed +x, FireRate *x, ...)
 }

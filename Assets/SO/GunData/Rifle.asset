@@ -19,6 +19,9 @@ MonoBehaviour:
   accuracy: 1
   maxLevel: 5
   weaponID: Rifle
+  upgradeable:
+  - {fileID: 11400000, guid: 32e61dce1fc622d43abe2eaaef541be4, type: 2}
+  - {fileID: 11400000, guid: 2195c8aae7b558045ae54a2a65c6ea59, type: 2}
   cooldown: 0.4
   bulletsPerShot: 1
   spreadAngle: 10

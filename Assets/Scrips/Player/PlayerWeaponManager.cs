@@ -29,27 +29,21 @@ public class PlayerWeaponManager : MonoBehaviour
 
     public void ApplyUpgrade(UpgradeData upgrade)
     {
-        if (upgrade.isWeaponUpgrade)
-        {
-            // tìm các vũ khí có id = name 
+        // Tìm vũ khí có sẵn
+        var gun = weapons.Find(w => w.WeaponID == upgrade.upgradeName);
 
-            var gun = weapons.Find(w => w.WeaponID == upgrade.upgradeName);
-            // nếu tìm thấy nghĩa là đã có vũ khí này rồi chỉ áp dung hiệu ứng nâng cấp 
-            if (gun != null)
-            {
-                gun.ApplyUpgrade(upgrade);
-            }
-            // ngược lại nếu ko tìm thấy nghĩa là không có vũ khí này thêm vũ khí vào list vk
-            else
-            {
-                if (!IsWeaponFull())
-                    AddWeapon(upgrade.upgradeName);
-            }
+        // Nếu tìm thấy, áp dụng nâng cấp
+        if (gun != null)
+        {
+            gun.ApplyUpgrade(upgrade);
         }
+        // Nếu không tìm thấy, đây là vũ khí mới
         else
         {
-            // TODO: Apply player passive upgrade (HP, MoveSpeed, EXP Range...)
-            Debug.Log($"Apply passive upgrade: {upgrade.upgradeName}");
+            if (!IsWeaponFull())
+            {
+                AddWeapon(upgrade.upgradeName);
+            }
         }
     }
 

@@ -18,6 +18,9 @@ MonoBehaviour:
   damagePerShot: 5
   attackRadius: 7
   coneAngle: 60
+  upgradeable:
+  - {fileID: 11400000, guid: 8575177d68e30f240838ff2f12900314, type: 2}
+  - {fileID: 11400000, guid: 456a1568074658b4da04dcfb757dfbe0, type: 2}
   targetingStrategyID: ClosestEnemy
   effectPrefab: {fileID: 6693658017530370735, guid: d72d9563908706c4696586bfd5eaa322, type: 3}
   enemyLayer:

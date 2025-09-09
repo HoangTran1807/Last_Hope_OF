@@ -44,16 +44,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d83fc23ecf9e65479743d3802550596, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldown: 0
-  gunData: {fileID: 11400000, guid: feaec88fc2488424ab984ccd883aa7b7, type: 2}
-  levelUpgrades: []
+  weaponID: Rifle
   currentLevel: 1
   maxLevel: 5
-  bulletPrefab: {fileID: 0}
-  damage: 0
-  bulletSpeed: 0
-  bulletsPerShot: 0
-  spreadAngle: 0
-  accuracy: 0
-  attackRadius: 0
+  cooldown: 10
+  upgradeable:
+  - {fileID: 11400000, guid: 32e61dce1fc622d43abe2eaaef541be4, type: 2}
+  - {fileID: 11400000, guid: 2195c8aae7b558045ae54a2a65c6ea59, type: 2}
+  gunData: {fileID: 11400000, guid: feaec88fc2488424ab984ccd883aa7b7, type: 2}
+  bulletPrefab: {fileID: 6474508735009773909, guid: 4bc5221e7aa9faf4ca08ce3ea2b8ee3a, type: 3}
+  damage: 10
+  bulletSpeed: 10
+  bulletsPerShot: 1
+  spreadAngle: 10
+  accuracy: 1
+  attackRadius: 10
   targetingStrategyID: 

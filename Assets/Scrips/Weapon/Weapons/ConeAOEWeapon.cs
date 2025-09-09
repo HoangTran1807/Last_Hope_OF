@@ -22,10 +22,11 @@ public class ConeAOEWeapon : BaseWeapon
     {
         if (weaponData != null)
         {
-            cooldown           = weaponData.cooldown;     // từ BaseWeapon
+            cooldown           = weaponData.cooldown;
+            upgradeable = weaponData.upgradeable;
             maxLevel           = weaponData.maxLevel;
             weaponID           = weaponData.weaponID;
-
+            
             damagePerShot      = weaponData.damagePerShot;
             attackRadius       = weaponData.attackRadius;
             coneAngle          = weaponData.coneAngle;
@@ -95,14 +96,11 @@ public class ConeAOEWeapon : BaseWeapon
         if (effectPrefab != null)
         {
 
-            float angleX = Mathf.Atan2(fireDir.y, fireDir.x) * Mathf.Rad2Deg;
+            Vector2 direction =  currentTarget.transform.position -  playerPos;
+            effectPrefab.transform.rotation = Quaternion.LookRotation(direction);
 
 
-            effectPrefab.transform.rotation = Quaternion.Euler(
-                angleX,
-                90f,
-                effectPrefab.transform.rotation.eulerAngles.z
-            );
+            effectPrefab.transform.localScale =  new Vector3(attackRadius /5, attackRadius /5, 1);
 
             effectPrefab.Play();
         }

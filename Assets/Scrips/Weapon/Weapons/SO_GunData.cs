@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewGun", menuName = "Weapons/Gun Data")]
@@ -11,6 +12,7 @@ public class GunData : ScriptableObject
     [Range(0f, 1f)] public float accuracy = 1f;
     public int maxLevel;
     public string weaponID;
+    public List<UpgradeData> upgradeable;
 
     [Header("Cooldown")]
     public float cooldown = 0.5f;

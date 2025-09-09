@@ -2,7 +2,6 @@
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject[] enemyPrefabs;  // danh sách quái
     [SerializeField] private int maxEnemies = 20;
     [SerializeField] private Transform player;
     [SerializeField] private float minSpawnDistance = 20f;
@@ -10,10 +9,13 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
-        // Tạo pool cho từng loại quái
-        foreach (var prefab in enemyPrefabs)
+        // tạo pool cho từng loại quái trong tất cả state
+        foreach (var state in EnemyManager.Instance.states)
         {
-            EnemyPoolManager.Instance.CreatePool(prefab, maxEnemies);
+            foreach (var prefab in state.enemyPrefabs)
+            {
+                EnemyPoolManager.Instance.CreatePool(prefab, maxEnemies);
+            }
         }
     }
 
@@ -23,36 +25,34 @@ public class EnemySpawner : MonoBehaviour
 
         if (currentEnemyCount < maxEnemies)
         {
-            int enemiesToSpawn = maxEnemies - currentEnemyCount;
-            for (int i = 0; i < enemiesToSpawn; i++)
-            {
-                SpawnEnemy();
-            }
+            TrySpawnEnemy();
         }
     }
 
-    private void SpawnEnemy()
+    private void TrySpawnEnemy()
     {
-        if (player == null || enemyPrefabs == null || enemyPrefabs.Length == 0) return;
+        var state = EnemyManager.Instance.GetCurrentState();
+        if (state == null || state.enemyPrefabs.Count == 0 || player == null) return;
 
-        // chọn ngẫu nhiên prefab quái
-        GameObject selectedPrefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
+        // chọn prefab ngẫu nhiên từ state hiện tại
+        GameObject selectedPrefab = state.enemyPrefabs[Random.Range(0, state.enemyPrefabs.Count)];
+        BaseEnemy enemyPrefab = selectedPrefab.GetComponent<BaseEnemy>();
 
-        // chọn vị trí spawn ngẫu nhiên quanh player
+        if (enemyPrefab == null) return;
+
+        // kiểm tra điểm còn lại có đủ để spawn không
+        if (!EnemyManager.Instance.TrySpawnEnemy(selectedPrefab, GetSpawnPosition()))
+        {
+            // Debug.Log("Không đủ infested point để spawn " + selectedPrefab.name);
+        }
+    }
+
+
+
+    private Vector3 GetSpawnPosition()
+    {
         Vector2 randomDirection = Random.insideUnitCircle.normalized;
         float randomDistance = Random.Range(minSpawnDistance, maxSpawnDistance);
-        Vector2 spawnPosition = (Vector2)player.position + randomDirection * randomDistance;
-
-        // lấy quái từ pool
-        GameObject enemyObj = EnemyPoolManager.Instance.GetObject(selectedPrefab);
-        enemyObj.transform.position = spawnPosition;
-        enemyObj.transform.rotation = Quaternion.identity;
-
-        BaseEnemy enemy = enemyObj.GetComponent<BaseEnemy>();
-        if (enemy != null)
-        {
-            enemy.Init(selectedPrefab); // truyền prefab gốc để biết loại
-            EnemyManager.Instance.RegisterEnemy(enemy);
-        }
+        return (Vector2)player.position + randomDirection * randomDistance;
     }
 }

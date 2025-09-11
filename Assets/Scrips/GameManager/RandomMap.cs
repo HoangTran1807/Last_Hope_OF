@@ -4,31 +4,26 @@ using UnityEngine.Tilemaps;
 
 public class RandomMapTile : MonoBehaviour
 {
-    [Header("Debug / Test")]
-    public bool forceReRender = false;
-    public bool isRender = false;
-
-
-    [Header("TilemapLayer")]
+    [Header("Tilemap Layers")]
     public Tilemap WaterLayer;
     public Tilemap SandLayer;
     public Tilemap GrassLayer;
     public Tilemap RockLayer;
-    public Tilemap detailTileMap;
+    public Tilemap DetailTileMap;
 
-    [Header("Tilemap Settings")]
+    [Header("Base Tiles")]
     public TileBase waterTile;
     public TileBase sandTile;
     public TileBase grassTile;
     public TileBase rockTile;
 
-    [Header("Tilemap Detail")]
+    [Header("Detail Tiles")]
     public Tile[] deadTrees;
     public Tile[] rocks;
     public Tile[] skeleton;
     public Tile[] crystals;
     public Tile[] stones;
-    public Tile[] drybrust;
+    public Tile[] drybrush;
 
     [Header("Noise Settings")]
     public float scale = 20f;
@@ -45,35 +40,42 @@ public class RandomMapTile : MonoBehaviour
     private Vector2 offset;
     private Dictionary<Vector2Int, bool> generatedChunks = new Dictionary<Vector2Int, bool>();
 
+    // Thresholds
     float sandLevel = 0.3f;
     float grassLevel = 0.4f;
     float rockLevel = 0.8f;
 
     private void Start()
     {
+        InitSeed();
+    }
+
+    private void Update()
+    {
+        // Chỉ update khi game đang play
+        if (GameController.Instance != null && GameController.Instance.isPlay)
+        {
+            UpdateChunksAroundPlayer();
+        }
+
+        // Debug: nhấn R để reload map
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ReloadMap();
+        }
+    }
+
+    private void InitSeed()
+    {
         Random.InitState(seed);
         offset.x = Random.Range(0f, 99999f);
         offset.y = Random.Range(0f, 99999f);
     }
 
-    private void Update()
-    {
-        if (isRender)
-        {
-            UpdateChunksAroundPlayer();
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            ClearAllChunks();
-            forceReRender = true;
-            UpdateChunksAroundPlayer();
-            forceReRender = false;
-        }
-    }
-
     private void UpdateChunksAroundPlayer()
     {
+        if (player == null) return;
+
         Vector2Int playerChunk = GetChunkCoord(player.position);
 
         for (int y = -renderDistance; y <= renderDistance; y++)
@@ -82,7 +84,7 @@ public class RandomMapTile : MonoBehaviour
             {
                 Vector2Int chunkCoord = new Vector2Int(playerChunk.x + x, playerChunk.y + y);
 
-                if (forceReRender || !generatedChunks.ContainsKey(chunkCoord))
+                if (!generatedChunks.ContainsKey(chunkCoord))
                 {
                     GenerateChunk(chunkCoord);
                     generatedChunks[chunkCoord] = true;
@@ -98,13 +100,27 @@ public class RandomMapTile : MonoBehaviour
         return new Vector2Int(cx, cy);
     }
 
+    /// <summary>
+    /// Xóa toàn bộ map và vẽ lại với seed mới nếu được truyền
+    /// </summary>
+    public void ReloadMap(int? newSeed = null)
+    {
+        ClearAllChunks();
+
+        if (newSeed.HasValue)
+            seed = newSeed.Value;
+
+        InitSeed();
+        UpdateChunksAroundPlayer();
+    }
+
     private void ClearAllChunks()
     {
         WaterLayer.ClearAllTiles();
         SandLayer.ClearAllTiles();
         GrassLayer.ClearAllTiles();
         RockLayer.ClearAllTiles();
-        detailTileMap.ClearAllTiles();
+        DetailTileMap.ClearAllTiles();
 
         generatedChunks.Clear();
     }
@@ -126,43 +142,26 @@ public class RandomMapTile : MonoBehaviour
 
                 float sample = OctavePerlin(xCoord, yCoord);
 
-                // chọn tilemap layer phù hợp
                 SetTileToLayer(sample, new Vector3Int(worldX, worldY, 0));
 
-                // tile detail
-                Tile detail = getDetailTile(sample);
+                Tile detail = GetDetailTile(sample);
                 if (detail != null)
-                {
-                    detailTileMap.SetTile(new Vector3Int(worldX, worldY, 0), detail);
-                }
+                    DetailTileMap.SetTile(new Vector3Int(worldX, worldY, 0), detail);
             }
         }
     }
 
     private void SetTileToLayer(float sample, Vector3Int pos)
     {
-        // Base: water luôn có đầy đủ
         WaterLayer.SetTile(pos, waterTile);
 
-        // Nếu sample >= sand thì phủ cát lên nước
         if (sample >= sandLevel)
-        {
             SandLayer.SetTile(pos, sandTile);
-        }
-
-        // Nếu sample >= grass thì phủ cỏ lên cát
         if (sample >= grassLevel)
-        {
             GrassLayer.SetTile(pos, grassTile);
-        }
-
-        // Nếu sample >= rock thì phủ đá lên cỏ
         if (sample >= rockLevel)
-        {
             RockLayer.SetTile(pos, rockTile);
-        }
     }
-
 
     private float OctavePerlin(float x, float y)
     {
@@ -175,7 +174,6 @@ public class RandomMapTile : MonoBehaviour
         {
             float noiseValue = Mathf.PerlinNoise(x * frequency, y * frequency) * 2 - 1;
             total += noiseValue * amplitude;
-
             maxValue += amplitude;
             amplitude *= persistence;
             frequency *= lacunarity;
@@ -184,44 +182,40 @@ public class RandomMapTile : MonoBehaviour
         return (total / maxValue + 1) / 2f;
     }
 
-    private Tile getDetailTile(float sample)
+    private Tile GetDetailTile(float sample)
     {
         if (sample < sandLevel) return null;
 
         if (sample >= sandLevel && sample < grassLevel)
         {
-            if (CanSetDitail(0.002f)) return GetRandomTile(rocks);
-            if (CanSetDitail(0.001f)) return GetRandomTile(skeleton);
+            if (CanSetDetail(0.002f)) return GetRandomTile(rocks);
+            if (CanSetDetail(0.001f)) return GetRandomTile(skeleton);
         }
 
         if (sample >= grassLevel && sample < rockLevel)
         {
-            if (CanSetDitail(0.001f)) return GetRandomTile(deadTrees);
-            if (CanSetDitail(0.001f)) return GetRandomTile(skeleton);
-            if (CanSetDitail(0.0015f)) return GetRandomTile(rocks);
-            if (CanSetDitail(0.0008f)) return GetRandomTile(drybrust);
+            if (CanSetDetail(0.001f)) return GetRandomTile(deadTrees);
+            if (CanSetDetail(0.001f)) return GetRandomTile(skeleton);
+            if (CanSetDetail(0.0015f)) return GetRandomTile(rocks);
+            if (CanSetDetail(0.0008f)) return GetRandomTile(drybrush);
         }
 
         if (sample >= rockLevel)
         {
-            if (CanSetDitail(0.003f)) return GetRandomTile(rocks);
-            if (CanSetDitail(0.0015f)) return GetRandomTile(crystals);
-            if (CanSetDitail(0.001f)) return GetRandomTile(skeleton);
-            if (CanSetDitail(0.001f)) return GetRandomTile(stones);
+            if (CanSetDetail(0.003f)) return GetRandomTile(rocks);
+            if (CanSetDetail(0.0015f)) return GetRandomTile(crystals);
+            if (CanSetDetail(0.001f)) return GetRandomTile(skeleton);
+            if (CanSetDetail(0.001f)) return GetRandomTile(stones);
         }
 
         return null;
     }
 
-    private bool CanSetDitail(float rate)
-    {
-        return Random.value < rate;
-    }
+    private bool CanSetDetail(float rate) => Random.value < rate;
 
     private Tile GetRandomTile(Tile[] tiles)
     {
         if (tiles == null || tiles.Length == 0) return null;
-        int index = Random.Range(0, tiles.Length);
-        return tiles[index];
+        return tiles[Random.Range(0, tiles.Length)];
     }
 }

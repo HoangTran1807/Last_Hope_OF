@@ -111,7 +111,7 @@ public class BaseGun : BaseWeapon
         GameObject bullet = SpawnFromPool(bulletPrefab, playerPos, Quaternion.identity);
         if (bullet != null && bullet.TryGetComponent(out BaseBullet bulletScript))
         {
-            bulletScript.Init(bulletPrefab, spreadDir, damage, bulletSpeed, 3f);
+            bulletScript.Init(bulletPrefab, spreadDir, damage * PlayerStats.Instance.DamageMultiplier, bulletSpeed, 3f);
         }
     }
 

@@ -1,16 +1,18 @@
 ﻿using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class UpgradeOptionUI : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI descText;
-    [SerializeField] private int updateIndex;
 
     private UpgradeData upgradeData;
+
+    // Sự kiện bắn ra khi click
+    public UnityEvent<UpgradeData> OnSelected = new UnityEvent<UpgradeData>();
 
     public void SetData(UpgradeData data)
     {
@@ -20,16 +22,11 @@ public class UpgradeOptionUI : MonoBehaviour
         descText.text = data.description;
     }
 
-    // Hàm này s? ???c g?i khi click vào panel
     public void OnClick()
     {
         if (upgradeData == null) return;
 
-        UpgradeManager.Instance.ApplyUpgrade(upgradeData);
-
-        // ?n panel ch?n
-        Object.FindFirstObjectByType<UpgradePanel>().HidePanel();
-
-        Time.timeScale = 1f;
+        // Chỉ phát sự kiện nâng cấp vũ khí 
+        OnSelected.Invoke(upgradeData);
     }
 }

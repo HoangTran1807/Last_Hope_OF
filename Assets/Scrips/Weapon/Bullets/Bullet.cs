@@ -30,7 +30,7 @@ public class Bullet : MonoBehaviour
         // xoay viên đạn theo hướng bay
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-        // offset thêm góc (vd: -90, +90, -45 tuỳ sprite)
+        // offset thêm góc 
         transform.rotation = Quaternion.Euler(0f, 0f, angle + rotationOffset);
 
         // countdown lifeTime

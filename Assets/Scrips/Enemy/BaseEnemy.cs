@@ -39,7 +39,7 @@ public abstract class BaseEnemy : MonoBehaviour
 
     public virtual void TakeDamage(float dmg)
     {
-        currentHealth -= dmg * PlayerStats.Instance.DamageMultiplier;
+        currentHealth -= dmg;
         flashCouter = flashTime;
 
         if (currentHealth <= 0)

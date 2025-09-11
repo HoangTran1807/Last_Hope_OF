@@ -4,6 +4,7 @@ public class PlayerHealth : MonoBehaviour
 {
     private PlayerStats PlayerStats;
     private float immunityCouter;
+    [SerializeField] private ParticleSystem hitEffect;
 
     void Start()
     {
@@ -24,14 +25,19 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        // n?u ng??i ch?i ?ang trong tr?ng thái kháng sát th??ng b? qua sát th??ng l?n này 
         if (immunityCouter > 0)
         {
             Debug.Log("player ignore damage");
             return;
         }
+
+
         damage = Mathf.Max(damage, 0f);
 
         PlayerStats.CurrentHealth -= damage;
+        hitEffect.Play();
+        
         Debug.Log("Take damage");
         immunityCouter = PlayerStats.ImmunityTime;
 
@@ -58,6 +64,6 @@ public class PlayerHealth : MonoBehaviour
     public void Die()
     {
         Debug.Log("Player Died");
-        // Add death behavior here (disable player, trigger animation, etc.)
+        // n?u ng??i ch?i ch?t hi?n th? ui k?t qu? c?a game 
     }
 }

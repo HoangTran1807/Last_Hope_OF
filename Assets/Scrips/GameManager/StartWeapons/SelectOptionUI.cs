@@ -1,6 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class SelectOptionUI : MonoBehaviour
 {
@@ -9,9 +10,13 @@ public class SelectOptionUI : MonoBehaviour
 
     private UpgradeData gunData;
 
+    // Sự kiện bắn ra khi người chơi click
+    public UnityEvent<UpgradeData> OnSelected = new UnityEvent<UpgradeData>();
+
     public void SetData(UpgradeData data)
     {
         gunData = data;
+
         if (gunData == null)
         {
             Debug.LogWarning("Không tồn tại vũ khí này");
@@ -28,20 +33,6 @@ public class SelectOptionUI : MonoBehaviour
     public void OnClick()
     {
         if (gunData == null) return;
-
-        if (UpgradeManager.Instance != null)
-        {
-            UpgradeManager.Instance.ApplyUpgrade(gunData);
-            Debug.Log($"Đã thêm vũ khí {gunData.upgradeName} cho người chơi");
-        }
-        else
-        {
-            Debug.LogError("UpgradeManager chưa tồn tại trong scene!");
-        }
-
-        if (GameSetup.instance != null)
-        {
-            GameSetup.instance.Hide();
-        }
+        OnSelected.Invoke(gunData);
     }
 }

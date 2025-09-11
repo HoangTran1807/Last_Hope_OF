@@ -19,15 +19,18 @@ public class PlayerLevelSystem : MonoBehaviour
         }
     }
 
+
+    // kinh nghi?m c?n ?? lên c?p ti?p theo s? b?ng 120% c?p hi?n t?i 
     void LevelUp()
     {
         level++;
         currentExp -= expToNextLevel;
         expToNextLevel = Mathf.RoundToInt(expToNextLevel * 1.2f);
         Debug.Log("Level Up! Current Level: " + level);
-        if (UpgradePanel != null)
+
+        if (GameController.Instance != null)
         {
-            UpgradePanel.ShowUpgradeChoices();
+            GameController.Instance.ShowUpgrade();
         }
 
     }

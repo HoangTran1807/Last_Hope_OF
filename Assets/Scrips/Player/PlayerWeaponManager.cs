@@ -64,7 +64,6 @@ public class PlayerWeaponManager : MonoBehaviour
     {
         foreach (BaseWeapon weapon in weapons)
         {
-            Debug.Log(weapon.name);
             weapon.UpdateWeapon(transform.position);
         }
     }

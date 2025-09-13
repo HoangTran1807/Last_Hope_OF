@@ -10,8 +10,7 @@ public class GameUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timerUI;
     [SerializeField] private TextMeshProUGUI killedEnemyUI;
 
-    private float timer = 0;
-    private int killedEnemy = 0;
+    
 
     public static GameUI Instance;
 
@@ -24,7 +23,7 @@ public class GameUI : MonoBehaviour
     private void Update()
     {
         // tăng timer
-        timer += Time.deltaTime;
+
 
         // cập nhật HP bar
         HPBar.value = PlayerStats.Instance.CurrentHealth / PlayerStats.Instance.MaxHealth;
@@ -33,16 +32,13 @@ public class GameUI : MonoBehaviour
         //expBar.value = PlayerStats.Instance.CurrentExp / PlayerStats.Instance.RequiredExp;
 
         // hiển thị thời gian dạng mm:ss
-        int minutes = Mathf.FloorToInt(timer / 60f);
-        int seconds = Mathf.FloorToInt(timer % 60f);
+        int minutes = Mathf.FloorToInt(GameController.Instance.timer / 60f);
+        int seconds = Mathf.FloorToInt(GameController.Instance.timer % 60f);
         timerUI.text = "Time Survival: " + string.Format("{0:00}:{1:00}", minutes, seconds);
 
         // số quái đã giết hiển thị liên tục
-        killedEnemyUI.text = "Enemy Killled: " + killedEnemy.ToString();
+        killedEnemyUI.text = "Enemy Killled: " + GameController.Instance.killedEnemy.ToString();
     }
 
-    public void AddKilledEnemy()
-    {
-        killedEnemy++;
-    }
+
 }

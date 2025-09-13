@@ -52,8 +52,9 @@ public class RandomMapTile : MonoBehaviour
 
     private void Update()
     {
-        // Chỉ update khi game đang play
-        if (GameController.Instance != null && GameController.Instance.isPlay)
+        // Chỉ update map khi game đang thực sự chạy
+        if (GameController.Instance != null &&
+            GameController.Instance.CurrentState == GameState.Playing)
         {
             UpdateChunksAroundPlayer();
         }
@@ -64,6 +65,7 @@ public class RandomMapTile : MonoBehaviour
             ReloadMap();
         }
     }
+
 
     private void InitSeed()
     {

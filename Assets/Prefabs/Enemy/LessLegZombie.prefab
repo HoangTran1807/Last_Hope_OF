@@ -107,9 +107,12 @@ MonoBehaviour:
   moveSpeed: 2
   damage: 10
   expDrop: 10
+  infestedCost: 5
   spriteRenderer: {fileID: 936345354785158875}
-  flashtime: 0.2
+  flashTime: 0.1
   flashCouter: 0
+  maxDistanceFromPlayer: 15
+  offset: 1
 --- !u!50 &2236386075039840477
 Rigidbody2D:
   serializedVersion: 5

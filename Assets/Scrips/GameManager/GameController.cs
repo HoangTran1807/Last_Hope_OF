@@ -1,110 +1,170 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public enum GameState
+{
+    Menu,
+    WeaponSelect,
+    Playing,
+    Paused,
+    Upgrade,
+    Setting
+}
 
 public class GameController : BaseManager<GameController>
 {
     private float deltaTime = 0.0f;
-    public Boolean isPlay = false;
+    public float timer = 0;
+    public int killedEnemy = 0;
+    public GameState CurrentState { get; private set; } = GameState.Menu;
 
+    public void AddKilledEnemy()
+    {
+        killedEnemy++;
+ 
+    }
 
     private void Start()
     {
-        // Fade-out nhạc menu và phát nhạc in-game
-        AudioManager.Instance.PlayRandomBGM(isPlay);
+        Application.targetFrameRate = 60;
+        // Bắt đầu ở menu
         Time.timeScale = 0f;
+        UIManager.Instance.ShowUI(GameState.Menu);
+
+        // Phát nhạc menu
+        AudioManager.Instance.PlayRandomBGM(false);
     }
 
-    void Update()
+    private void Update()
     {
-        // deltaTime trung bình để giảm giật (FPS counter)
+        // FPS counter
         deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
 
+
+        // tăng thời gian nếu người chơi đang chơi 
+        if (CurrentState == GameState.Playing)
+            timer += Time.deltaTime;
+
+        // Pause bằng phím ESC
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (isPlay)
+            if (CurrentState == GameState.Playing)
             {
-                // Nếu đang chơi, pause và mở menu/setting
                 PauseGame();
+            }
+            else if (CurrentState == GameState.Paused)
+            {
+                ResumeGame();
             }
         }
     }
 
-
-    void OnGUI()
+    private void OnGUI()
     {
         int w = Screen.width, h = Screen.height;
-
         GUIStyle style = new GUIStyle();
 
-        Rect rect = new Rect(0, 0, w, h * 2 / 100); // vị trí hiển thị
+        Rect rect = new Rect(0, 0, w, h * 2 / 100);
         style.alignment = TextAnchor.UpperLeft;
-        style.fontSize = h * 2 / 50; // cỡ chữ
+        style.fontSize = h * 2 / 50;
         style.normal.textColor = Color.white;
 
-        float msec = deltaTime * 1000.0f;   // thời gian 1 frame (ms)
-        float fps = 1.0f / deltaTime;       // số khung hình/giây
+        float msec = deltaTime * 1000.0f;
+        float fps = 1.0f / deltaTime;
         string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);
         GUI.Label(rect, text, style);
     }
 
+    // ================== GAME FLOW ==================
+
     public void PlayGame()
     {
-        // ẩn main menu ui
-        // hiện menu chọn vũ khí    
-        // chơi nhạc nền in game
-        
         Debug.Log("Play Game được ấn!");
-        UIManager.Instance.MenuUI.gameObject.SetActive(false);
-        UIManager.Instance.SelectWeaponPanel.gameObject.SetActive(true);
-        GameSetup.Instance.ShowWeaponSelection();
-        AudioManager.Instance.PlayRandomBGM(isPlay);
+        ChangeState(GameState.WeaponSelect);
 
+        GameSetup.Instance.ShowWeaponSelection();
+        AudioManager.Instance.PlayRandomBGM(true);
     }
 
     public void StartGame()
     {
-        UIManager.Instance.ShowGameUI();
-        Time.timeScale = 1.0f;
-        isPlay = true;
+        Debug.Log("Bắt đầu gameplay!");
+        ChangeState(GameState.Playing);
     }
 
     public void PauseGame()
     {
-        UIManager.Instance.SetPauseUI(true);
-        Time.timeScale = 0f;
-        isPlay= false;
+        Debug.Log("Game paused!");
+        ChangeState(GameState.Paused);
     }
 
     public void ResumeGame()
     {
-        UIManager.Instance.SetPauseUI(false);
-        Time.timeScale = 1f;
-        isPlay = true;
+        Debug.Log("Resume game!");
+        ChangeState(GameState.Playing);
     }
-
 
     public void ShowUpgrade()
     {
-        if(UIManager.Instance != null)
-        {
-            UIManager.Instance.UpgradePanel.gameObject.SetActive(true);
-            UpgradePanelController.Instance.ShowUpgradePanel();
-        }
+        Debug.Log("Show upgrade panel!");
+        ChangeState(GameState.Upgrade);
+        UpgradePanelController.Instance.ShowUpgradePanel();
     }
-
 
     public void OpenSetting()
     {
-        Debug.Log("open setting");
-        UIManager.Instance.SettingPanel.gameObject.SetActive(true);
+        Debug.Log("Open setting!");
+        ChangeState(GameState.Setting);
+    }
+
+    public void ExitToMenu()
+    {
+        Debug.Log("Quay về menu!");
+        ChangeState(GameState.Menu);
+        RestartGame();
         
     }
 
-    // khi thoát ra main menu 
-    public void ExitToMenu()
+    public void RestartGame()
     {
-       
-        Debug.Log("back to menu");
+        // lấy scene hiện tại và load lại
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        killedEnemy = 0;
+        timer = 0;
+    }
 
+    // ================== STATE HANDLER ==================
+    private void ChangeState(GameState newState)
+    {
+        CurrentState = newState;
+        UIManager.Instance.ShowUI(newState);
+
+        switch (newState)
+        {
+            case GameState.Menu:
+                Time.timeScale = 0f;
+                break;
+
+            case GameState.WeaponSelect:
+                Time.timeScale = 0f;
+                break;
+
+            case GameState.Playing:
+                Time.timeScale = 1f;
+                break;
+
+            case GameState.Paused:
+                Time.timeScale = 0f;
+                break;
+
+            case GameState.Upgrade:
+                Time.timeScale = 0f;
+                break;
+
+            case GameState.Setting:
+                Time.timeScale = 0f;
+                break;
+        }
     }
 }

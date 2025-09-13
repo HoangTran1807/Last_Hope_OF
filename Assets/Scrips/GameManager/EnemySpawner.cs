@@ -7,6 +7,8 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float minSpawnDistance = 20f;
     [SerializeField] private float maxSpawnDistance = 30f;
 
+    private float spawnTimer = 0f;
+
     private void Start()
     {
         // tạo pool cho từng loại quái trong tất cả state
@@ -21,30 +23,32 @@ public class EnemySpawner : MonoBehaviour
 
     private void Update()
     {
-        int currentEnemyCount = EnemyManager.Instance.GetEnemyCount();
+        if (player == null) return;
 
-        if (currentEnemyCount < maxEnemies)
+        spawnTimer -= Time.deltaTime;
+
+        int currentEnemyCount = EnemyManager.Instance.GetEnemyCount();
+        if (currentEnemyCount < maxEnemies && spawnTimer <= 0f)
         {
-            TrySpawnEnemy();
+            if (TrySpawnEnemy())
+            {
+                // lấy cooldown theo state hiện tại
+                var state = EnemyManager.Instance.GetCurrentState();
+                if (state != null)
+                {
+                    spawnTimer = state.spawnCooldown;
+                }
+            }
         }
     }
 
-    private void TrySpawnEnemy()
+    private bool TrySpawnEnemy()
     {
         var state = EnemyManager.Instance.GetCurrentState();
-        if (state == null || state.enemyPrefabs.Count == 0 || player == null) return;
+        if (state == null || state.enemyPrefabs.Count == 0) return false;
 
-        // chọn prefab ngẫu nhiên từ state hiện tại
         GameObject selectedPrefab = state.enemyPrefabs[Random.Range(0, state.enemyPrefabs.Count)];
-        BaseEnemy enemyPrefab = selectedPrefab.GetComponent<BaseEnemy>();
-
-        if (enemyPrefab == null) return;
-
-        // kiểm tra điểm còn lại có đủ để spawn không
-        if (!EnemyManager.Instance.TrySpawnEnemy(selectedPrefab, GetSpawnPosition()))
-        {
-            // Debug.Log("Không đủ infested point để spawn " + selectedPrefab.name);
-        }
+        return EnemyManager.Instance.TrySpawnEnemy(selectedPrefab, GetSpawnPosition());
     }
 
 

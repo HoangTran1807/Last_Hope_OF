@@ -5,8 +5,6 @@ public class PlayerLevelSystem : MonoBehaviour
     public int level = 1;
     public int currentExp = 0;
     public int expToNextLevel = 100;
-    [SerializeField]
-    private UpgradePanel UpgradePanel;
 
     public void AddExp(int amount)
     {

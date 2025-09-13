@@ -18,6 +18,11 @@ public abstract class BaseEnemy : MonoBehaviour
     public float flashTime = 0.1f;
     public float flashCouter = 0;
 
+    [Header("swarpSystem")]
+    [SerializeField] protected float maxDistanceFromPlayer = 15f;
+    [SerializeField] protected float offset = 1f;
+
+
     protected Rigidbody2D rb;
     private GameObject originPrefab; // prefab gốc (dùng cho pool)
 
@@ -53,13 +58,14 @@ public abstract class BaseEnemy : MonoBehaviour
         OrbPool.Instance.GetOrb(transform.position, expDrop);
     }
 
-    protected abstract void Move();
+    protected abstract void Move(Transform player);
+    protected abstract void CheckWrapPosition(Transform player);
 
     protected virtual void Die()
     {
         EnemyManager.Instance.UnregisterEnemy(this);
         EnemyManager.Instance.ReturnPoint(this.infestedCost);
-        GameUI.Instance.AddKilledEnemy();
+        GameController.Instance.AddKilledEnemy();
         DropOrb();
 
 
@@ -70,7 +76,8 @@ public abstract class BaseEnemy : MonoBehaviour
     }
 
     // Cho phép EnemyManager gọi mỗi frame
-    public void DoMove() => Move();
+    public void DoMove(Transform player) => Move(player);
+    public void DoSwap(Transform player) => CheckWrapPosition(player);
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

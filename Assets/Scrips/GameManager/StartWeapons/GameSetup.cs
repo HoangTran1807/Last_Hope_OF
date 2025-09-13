@@ -29,9 +29,7 @@ public class GameSetup : MonoBehaviour
             return;
         }
 
-        UIManager.Instance.ShowWeaponSelect();
         weaponSelectUI.BuildOptions(startingUnlocks, OnWeaponSelected);
-        Time.timeScale = 0f;
     }
 
     private void OnWeaponSelected(UpgradeData data)

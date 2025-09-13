@@ -1,21 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class UpgradePanelController : MonoBehaviour
+public class UpgradePanelController : BaseManager<UpgradePanelController>
 {
     [SerializeField] private UpgradePanelUI panelUI;
 
-    public static UpgradePanelController Instance { get; private set; }
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
 
     /// <summary>
     /// Hiển thị panel upgrade và pause game
@@ -35,8 +24,6 @@ public class UpgradePanelController : MonoBehaviour
             option.OnSelected.RemoveAllListeners();
             option.OnSelected.AddListener(OnUpgradeSelected);
         }
-
-        GameController.Instance.PauseGame();
     }
 
     private void OnUpgradeSelected(UpgradeData data)

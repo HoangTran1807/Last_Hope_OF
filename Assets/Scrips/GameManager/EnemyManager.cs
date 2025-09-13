@@ -3,6 +3,14 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
+    [System.Serializable]
+    public class EnemyState
+    {
+        public string stateName;
+        public List<GameObject> enemyPrefabs;
+        public float spawnCooldown = 3f; // thời gian chờ giữa các lần spawn
+    }
+
     public static EnemyManager Instance;
 
     private List<BaseEnemy> activeEnemies = new List<BaseEnemy>();
@@ -19,19 +27,21 @@ public class EnemyManager : MonoBehaviour
     [SerializeField]
     private int currentStateIndex = 0;
 
-    [System.Serializable]
-    public class EnemyState
-    {
-        public string stateName;
-        public List<GameObject> enemyPrefabs; // danh sách quái được spawn trong state này
-    }
+  
+
+
 
     [SerializeField] public List<EnemyState> states;
+    private Transform player;
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
+        if (Instance == null) 
+            Instance = this;
         else Destroy(gameObject);
+
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+
     }
 
     private void Start()
@@ -57,7 +67,9 @@ public class EnemyManager : MonoBehaviour
             BaseEnemy enemy = activeEnemies[i];
             if (enemy == null) continue;
 
-            enemy.DoMove();
+            enemy.DoMove(player);
+            enemy.DoSwap(player);
+            
 
             if (enemy.flashCouter > 0)
             {
@@ -140,8 +152,11 @@ public class EnemyManager : MonoBehaviour
     }
 
 
+
     public void ReturnPoint(float point)
     {
         currentPoints += point;
     }
+
+    
 }

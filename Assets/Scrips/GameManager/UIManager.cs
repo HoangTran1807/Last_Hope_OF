@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UIElements;
 
 public class UIManager : BaseManager<UIManager>
 {
@@ -9,8 +8,6 @@ public class UIManager : BaseManager<UIManager>
     public UpgradePanelUI UpgradePanel;
     public MenuUI MenuUI;
     public PauseUI PauseUI;
-    
-    
 
     protected override void Awake()
     {
@@ -19,35 +16,45 @@ public class UIManager : BaseManager<UIManager>
 
     private void Start()
     {
-        MenuUI.gameObject.SetActive(true);
+        ShowUI(GameState.Menu); // mặc định menu
+    }
+
+    public void ShowUI(GameState state)
+    {
+        // Ẩn hết trước
+        MenuUI.gameObject.SetActive(false);
         GameUI.gameObject.SetActive(false);
         UpgradePanel.gameObject.SetActive(false);
         SelectWeaponPanel.gameObject.SetActive(false);
         SettingPanel.gameObject.SetActive(false);
         PauseUI.gameObject.SetActive(false);
-    }
 
-    public void ShowWeaponSelect()
-    {
-        MenuUI.gameObject.SetActive(false);
-        GameUI.gameObject.SetActive(false);
-        UpgradePanel.gameObject.SetActive(false);
-        SelectWeaponPanel.gameObject.SetActive(true);
-        SettingPanel.gameObject.SetActive(false);
-    }
+        // Bật UI theo state
+        switch (state)
+        {
+            case GameState.Menu:
+                MenuUI.gameObject.SetActive(true);
+                break;
 
-    public void ShowGameUI()
-    {
-        MenuUI.gameObject.SetActive(false);
-        GameUI.gameObject.SetActive(true);
-        UpgradePanel.gameObject.SetActive(false);
-        SelectWeaponPanel.gameObject.SetActive(false);
-        SettingPanel.gameObject.SetActive(false);
-    }
+            case GameState.WeaponSelect:
+                SelectWeaponPanel.gameObject.SetActive(true);
+                break;
 
-    public void SetPauseUI(bool ispause)
-    {
-        PauseUI.gameObject.SetActive(ispause);
-        GameUI.gameObject.SetActive(!ispause);
+            case GameState.Playing:
+                GameUI.gameObject.SetActive(true);
+                break;
+
+            case GameState.Paused:
+                PauseUI.gameObject.SetActive(true);
+                break;
+
+            case GameState.Upgrade:
+                UpgradePanel.gameObject.SetActive(true);
+                break;
+
+            case GameState.Setting:
+                SettingPanel.gameObject.SetActive(true);
+                break;
+        }
     }
 }

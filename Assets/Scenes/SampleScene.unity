@@ -550,7 +550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 213b4d24922d2844ab0bb406e08b46ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingPoints: 100
+  startingPoints: 40
   pointsPerSecond: 0.5
   currentPoints: 0
   stateDuration: 300

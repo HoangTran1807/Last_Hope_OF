@@ -26,3 +26,4 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 256
+  shotSoundEffect: blazing-fire

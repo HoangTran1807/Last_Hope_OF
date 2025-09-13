@@ -45,6 +45,9 @@ public class UIManager : BaseManager<UIManager>
         SettingPanel.gameObject.SetActive(false);
     }
 
-    
-
+    public void SetPauseUI(bool ispause)
+    {
+        PauseUI.gameObject.SetActive(ispause);
+        GameUI.gameObject.SetActive(!ispause);
+    }
 }

@@ -65,12 +65,14 @@ public class SettingPanel : MonoBehaviour
     public void OnBGMMuteButtonClick()
     {
         isBGMMuted = !isBGMMuted;
+        AudioManager.Instance.PlayClickEffect();
         UpdateMuteButtonSprites();
     }
 
     public void OnSEMuteButtonClick()
     {
         isSEMuted = !isSEMuted;
+        AudioManager.Instance.PlayClickEffect();
         UpdateMuteButtonSprites();
     }
 
@@ -79,6 +81,7 @@ public class SettingPanel : MonoBehaviour
     {
         if (AudioManager.HasInstance)
         {
+            AudioManager.Instance.PlayClickEffect();
             AudioManager.Instance.ChangeBGMVolume(bgmVolume);
             AudioManager.Instance.ChangeSEVolume(seVolume);
             AudioManager.Instance.MuteBGM(isBGMMuted);
@@ -90,6 +93,7 @@ public class SettingPanel : MonoBehaviour
     // ==== Nút Close ====
     public void OnCloseButtonClick()
     {
+        AudioManager.Instance.PlayClickEffect();
         this.gameObject.SetActive(false);
     }
 }

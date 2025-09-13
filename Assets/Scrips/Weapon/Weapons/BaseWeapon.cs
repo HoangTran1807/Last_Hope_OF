@@ -8,6 +8,7 @@ public abstract class BaseWeapon : MonoBehaviour
     [SerializeField] protected int currentLevel = 1;
     [SerializeField] protected int maxLevel = 5;
     [SerializeField] protected float cooldown = 1f;
+    [SerializeField] protected string shotEffectName;
     public List<UpgradeData> upgradeable; // danh sách nâng cấp của vũ khí này 
 
     protected float timer;

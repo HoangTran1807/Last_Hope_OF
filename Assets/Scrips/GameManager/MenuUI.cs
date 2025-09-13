@@ -8,19 +8,22 @@ public class MenuUI : MonoBehaviour
     // === Xử lý nút Play Game ===
     public void OnPlayButtonClick()
     {
-       GameController.Instance.StartGame();
+        AudioManager.Instance.PlayClickEffect();
+        GameController.Instance.PlayGame();
     }
 
     // === Xử lý nút Sound Setting ===
     public void OnSoundSettingClick()
     {
         Debug.Log("Mở Setting Panel!");
+        AudioManager.Instance.PlayClickEffect();
         UIManager.Instance.SettingPanel.gameObject.SetActive(true);
     }
 
     // === Xử lý nút Quit Game ===
     public void OnQuitButtonClick()
     {
+        AudioManager.Instance.PlayClickEffect();
         Debug.Log("Thoát Game!");
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false; // dừng Play Mode trong Editor

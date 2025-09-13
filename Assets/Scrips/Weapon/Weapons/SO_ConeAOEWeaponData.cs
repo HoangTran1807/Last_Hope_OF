@@ -21,4 +21,7 @@ public class ConeAOEWeaponData : ScriptableObject
     [Header("Visual")]
     public ParticleSystem effectPrefab;
     public LayerMask enemyLayer;
+
+    [Header("sound")]
+    public string shotSoundEffect;
 }

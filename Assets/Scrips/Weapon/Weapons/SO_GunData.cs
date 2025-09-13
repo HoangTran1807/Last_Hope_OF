@@ -24,4 +24,7 @@ public class GunData : ScriptableObject
 
     [Header("Targeting Strategy")]
     public string targetingStrategyID;
+
+    [Header("sound")]
+    public string shotSoundEffect;
 }

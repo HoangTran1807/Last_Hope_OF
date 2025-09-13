@@ -25,13 +25,6 @@ public class GameController : BaseManager<GameController>
             {
                 // Nếu đang chơi, pause và mở menu/setting
                 PauseGame();
-                UIManager.Instance.PauseUI.gameObject.SetActive(true);
-            }
-            else
-            {
-                // Nếu đang pause, resume game
-                ResumeGame();
-                UIManager.Instance.PauseUI.gameObject.SetActive(false);
             }
         }
     }
@@ -54,8 +47,11 @@ public class GameController : BaseManager<GameController>
         GUI.Label(rect, text, style);
     }
 
-    public void StartGame()
+    public void PlayGame()
     {
+        // ẩn main menu ui
+        // hiện menu chọn vũ khí    
+        // chơi nhạc nền in game
         
         Debug.Log("Play Game được ấn!");
         UIManager.Instance.MenuUI.gameObject.SetActive(false);
@@ -63,19 +59,27 @@ public class GameController : BaseManager<GameController>
         GameSetup.Instance.ShowWeaponSelection();
         AudioManager.Instance.PlayRandomBGM(isPlay);
 
-        ResumeGame();
-        isPlay = true;
+    }
 
+    public void StartGame()
+    {
+        UIManager.Instance.ShowGameUI();
+        Time.timeScale = 1.0f;
+        isPlay = true;
     }
 
     public void PauseGame()
     {
+        UIManager.Instance.SetPauseUI(true);
         Time.timeScale = 0f;
+        isPlay= false;
     }
 
     public void ResumeGame()
     {
+        UIManager.Instance.SetPauseUI(false);
         Time.timeScale = 1f;
+        isPlay = true;
     }
 
 
@@ -85,8 +89,6 @@ public class GameController : BaseManager<GameController>
         {
             UIManager.Instance.UpgradePanel.gameObject.SetActive(true);
             UpgradePanelController.Instance.ShowUpgradePanel();
-            
-
         }
     }
 
@@ -94,7 +96,6 @@ public class GameController : BaseManager<GameController>
     public void OpenSetting()
     {
         Debug.Log("open setting");
-        PauseGame();
         UIManager.Instance.SettingPanel.gameObject.SetActive(true);
         
     }
@@ -104,5 +105,6 @@ public class GameController : BaseManager<GameController>
     {
        
         Debug.Log("back to menu");
+
     }
 }

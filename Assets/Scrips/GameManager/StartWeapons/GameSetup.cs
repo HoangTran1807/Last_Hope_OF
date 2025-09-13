@@ -39,7 +39,6 @@ public class GameSetup : MonoBehaviour
         UpgradeManager.Instance.ApplyUpgrade(data);
         Debug.Log($"Đã thêm vũ khí {data.upgradeName} cho người chơi");
 
-        UIManager.Instance.ShowGameUI();
-        Time.timeScale = 1f;
+        GameController.Instance.StartGame();
     }
 }

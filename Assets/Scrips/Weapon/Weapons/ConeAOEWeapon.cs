@@ -32,6 +32,7 @@ public class ConeAOEWeapon : BaseWeapon
             coneAngle          = weaponData.coneAngle;
             enemyLayer         = weaponData.enemyLayer;
             targetingStrategyID = weaponData.targetingStrategyID;
+            shotEffectName = weaponData.shotSoundEffect;
 
             if (weaponData.effectPrefab != null)
             {

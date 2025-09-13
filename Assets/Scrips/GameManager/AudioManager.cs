@@ -233,6 +233,7 @@ public class AudioManager : BaseManager<AudioManager>
             Debug.LogWarning($"Không tìm thấy SE {seName}");
             return;
         }
+        Debug.Log("player sound: " + seName);
         AttachSESource.PlayOneShot(seDic[seName]);
     }
 
@@ -268,5 +269,10 @@ public class AudioManager : BaseManager<AudioManager>
         AttachBGMSource.Stop();
         nextBGMName = "";
         isFadeOut = false;
+    }
+
+    public void PlayClickEffect()
+    {
+        PlaySE("mouseClick");
     }
 }

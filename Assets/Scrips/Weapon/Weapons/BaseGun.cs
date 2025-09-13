@@ -36,6 +36,7 @@ public class BaseGun : BaseWeapon
             maxLevel       = gunData.maxLevel;
             weaponID       = gunData.weaponID;
             targetingStrategyID = gunData.targetingStrategyID;
+            shotEffectName = gunData.shotSoundEffect;
         }
     }
 
@@ -71,7 +72,6 @@ public class BaseGun : BaseWeapon
     protected override void Fire(Vector3 playerPos)
     {
         if (bulletsPerShot <= 0) return;
-        Debug.Log("player post");
         BaseEnemy target = GetTarget(playerPos);
         if (target == null) return;
 
@@ -103,6 +103,7 @@ public class BaseGun : BaseWeapon
     private void ShootBullet(Vector3 playerPos, Vector2 dir)
     {
         Debug.Log("shot a bullet");
+        AudioManager.Instance.PlaySE(shotEffectName);
 
         float inaccuracyAngle = (1f - accuracy) * 15f;
         float randomAngle = Random.Range(-inaccuracyAngle, inaccuracyAngle);

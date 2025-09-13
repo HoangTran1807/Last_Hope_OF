@@ -26,3 +26,4 @@ MonoBehaviour:
   bulletsPerShot: 1
   spreadAngle: 10
   targetingStrategyID: 
+  shotSoundEffect: rifleShot

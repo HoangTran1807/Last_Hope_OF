@@ -21,8 +21,9 @@ public class GameController : BaseManager<GameController>
     public float timer = 0;
     public int killedEnemy = 0;
 
-    [SerializeField]
     private bool isWin = false;
+    private bool isIngame = false;
+
 
     private const float maxGameTime = 600f; // 10 phút
     public GameState CurrentState { get; private set; } = GameState.Menu;
@@ -107,6 +108,7 @@ public class GameController : BaseManager<GameController>
         Debug.Log("Play Game được ấn!");
         ChangeState(GameState.WeaponSelect);
         isWin = false;
+        isIngame = true;
 
         GameSetup.Instance.ShowWeaponSelection();
         AudioManager.Instance.PlayRandomBGM(true);
@@ -130,6 +132,18 @@ public class GameController : BaseManager<GameController>
         ChangeState(GameState.Playing);
     }
 
+    public void CloseSetting()
+    {
+        if (isIngame)
+        {
+            ChangeState(GameState.Paused);
+        }
+        else
+        {
+            ChangeState(GameState.Menu);
+        }
+    }
+
     public void ShowUpgrade(List<UpgradeData> upgrades)
     {
         if (upgrades.Count == 0 || upgrades == null)
@@ -150,6 +164,7 @@ public class GameController : BaseManager<GameController>
     {
         Debug.Log("Quay về menu!");
         AudioManager.Instance.PlayRandomBGM(false);
+        isIngame = false;
         ChangeState(GameState.Menu);
         RestartGame();  
     }

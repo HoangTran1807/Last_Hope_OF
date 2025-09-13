@@ -94,6 +94,6 @@ public class SettingPanel : MonoBehaviour
     public void OnCloseButtonClick()
     {
         AudioManager.Instance.PlayClickEffect();
-        GameController.Instance.PauseGame();
+        GameController.Instance.CloseSetting();
     }
 }

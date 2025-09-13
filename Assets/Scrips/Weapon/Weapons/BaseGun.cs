@@ -27,7 +27,7 @@ public class BaseGun : BaseWeapon
             bulletPrefab   = gunData.bulletPrefab;
             damage         = gunData.damage;
             bulletSpeed    = gunData.bulletSpeed;
-            rpm            = gunData.rpm;              // ✅ thay vì cooldown
+            rpm            = gunData.rpm;              
             upgradeable    = gunData.upgradeable;
             bulletsPerShot = gunData.bulletsPerShot;
             spreadAngle    = gunData.spreadAngle;

@@ -11,7 +11,8 @@ public enum GameState
     Playing,
     Paused,
     Upgrade,
-    Setting
+    Setting,
+    GameOver
 }
 
 public class GameController : BaseManager<GameController>
@@ -19,6 +20,11 @@ public class GameController : BaseManager<GameController>
     private float deltaTime = 0.0f;
     public float timer = 0;
     public int killedEnemy = 0;
+
+    [SerializeField]
+    private bool isWin = false;
+
+    private const float maxGameTime = 600f; // 10 phút
     public GameState CurrentState { get; private set; } = GameState.Menu;
 
     public void AddKilledEnemy()
@@ -48,7 +54,14 @@ public class GameController : BaseManager<GameController>
 
         // tăng thời gian nếu người chơi đang chơi 
         if (CurrentState == GameState.Playing)
+        {
             timer += Time.deltaTime;
+            if (!isWin && timer >= maxGameTime)
+            {
+                isWin = true;
+            }
+        }
+           
 
         // Pause bằng phím ESC
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -93,6 +106,7 @@ public class GameController : BaseManager<GameController>
     {
         Debug.Log("Play Game được ấn!");
         ChangeState(GameState.WeaponSelect);
+        isWin = false;
 
         GameSetup.Instance.ShowWeaponSelection();
         AudioManager.Instance.PlayRandomBGM(true);
@@ -135,9 +149,9 @@ public class GameController : BaseManager<GameController>
     public void ExitToMenu()
     {
         Debug.Log("Quay về menu!");
+        AudioManager.Instance.PlayRandomBGM(false);
         ChangeState(GameState.Menu);
-        RestartGame();
-        
+        RestartGame();  
     }
 
     public void RestartGame()
@@ -146,6 +160,21 @@ public class GameController : BaseManager<GameController>
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         killedEnemy = 0;
         timer = 0;
+    }
+
+    public void GameOver()
+    {
+        ChangeState(GameState.GameOver);
+
+        // Hiển thị UI game over
+        GameOverUI gameOverUI = UIManager.Instance.GameOverUI;
+        if (gameOverUI != null)
+        {
+            gameOverUI.ShowResult(isWin);
+        }
+
+        // Dừng tất cả gameplay
+        Time.timeScale = 0f;
     }
 
     // ================== STATE HANDLER ==================
@@ -181,4 +210,7 @@ public class GameController : BaseManager<GameController>
                 break;
         }
     }
+
+
+
 }

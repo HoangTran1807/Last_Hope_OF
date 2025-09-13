@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: Sniper
   description: "T\u0103ng t\u1ED1c \u0111\u1ED9 t\u1EA5n c\xF4ng"
-  isWeaponUpgrade: 1
+  category: 0
   maxLevel: 5
   icon: {fileID: 21300000, guid: 5d97986a7d2942842bcce910c9094ea0, type: 3}
   upgradeType: 1
-  value: 10
+  value: 15

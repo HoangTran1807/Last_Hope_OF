@@ -8,6 +8,7 @@ public class UIManager : BaseManager<UIManager>
     public UpgradePanelUI UpgradePanel;
     public MenuUI MenuUI;
     public PauseUI PauseUI;
+    public GameOverUI GameOverUI;
 
     protected override void Awake()
     {
@@ -28,6 +29,7 @@ public class UIManager : BaseManager<UIManager>
         SelectWeaponPanel.gameObject.SetActive(false);
         SettingPanel.gameObject.SetActive(false);
         PauseUI.gameObject.SetActive(false);
+        GameOverUI.gameObject.SetActive(false);
 
         // Bật UI theo state
         switch (state)
@@ -54,6 +56,9 @@ public class UIManager : BaseManager<UIManager>
 
             case GameState.Setting:
                 SettingPanel.gameObject.SetActive(true);
+                break;
+            case GameState.GameOver:
+                GameOverUI.gameObject.SetActive(true);
                 break;
         }
     }

@@ -103,5 +103,6 @@ public class PlayerHealth : MonoBehaviour
     {
         Debug.Log("Player Died");
         // show UI kết thúc game ở đây
+        GameController.Instance.GameOver();
     }
 }

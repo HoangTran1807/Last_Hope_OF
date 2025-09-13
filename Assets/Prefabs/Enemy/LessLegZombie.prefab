@@ -102,11 +102,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51e9523cc0a6ed8498d53e2fc3bdbc4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseHealth: 100
+  baseDamage: 10
+  baseSpeed: 4
+  expDrop: 20
   maxHealth: 100
   currentHealth: 0
-  moveSpeed: 2
   damage: 10
-  expDrop: 10
+  moveSpeed: 2
   infestedCost: 5
   spriteRenderer: {fileID: 936345354785158875}
   flashTime: 0.1

@@ -23,7 +23,7 @@ public class BulletPoolManager : MonoBehaviour
 
             for (int i = 0; i < initialSize; i++)
             {
-                GameObject obj = Instantiate(prefab, transform); // 👈 làm con PoolManager
+                GameObject obj = Instantiate(prefab, transform);
                 obj.SetActive(false);
                 newPool.Enqueue(obj);
             }
@@ -44,12 +44,12 @@ public class BulletPoolManager : MonoBehaviour
         {
             GameObject obj = pools[prefab].Dequeue();
             obj.SetActive(true);
-            obj.transform.SetParent(transform); // 👈 gắn lại parent PoolManager
+            obj.transform.SetParent(transform);
             return obj;
         }
         else
         {
-            GameObject obj = Instantiate(prefab, transform); // 👈 spawn con của PoolManager
+            GameObject obj = Instantiate(prefab, transform);
             return obj;
         }
     }
@@ -58,7 +58,7 @@ public class BulletPoolManager : MonoBehaviour
     public void ReturnObject(GameObject prefab, GameObject obj)
     {
         obj.SetActive(false);
-        obj.transform.SetParent(transform); // 👈 gom lại vào PoolManager
+        obj.transform.SetParent(transform);
         pools[prefab].Enqueue(obj);
     }
 }

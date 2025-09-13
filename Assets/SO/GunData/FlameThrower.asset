@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: FlameThrower
   m_EditorClassIdentifier: 
   weaponID: FlameThrower
-  cooldown: 0.1
-  maxLevel: 5
+  rpm: 600
+  maxLevel: 3
   damagePerShot: 5
   attackRadius: 7
   coneAngle: 60

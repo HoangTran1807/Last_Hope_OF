@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Damage
   m_EditorClassIdentifier: 
   upgradeName: FlameThrower
-  description: "t\u0103ng 5 s\u1EE9c t\u1EA5n c\xF4ng"
-  isWeaponUpgrade: 1
+  description: add flame power
+  category: 0
   maxLevel: 5
   icon: {fileID: 21300000, guid: 545b2826a7860ca449eadfd921b99faf, type: 3}
   upgradeType: 0

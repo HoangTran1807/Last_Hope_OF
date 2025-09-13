@@ -560,7 +560,7 @@ MonoBehaviour:
     enemyPrefabs:
     - {fileID: 2068678339260400939, guid: ef6df7753ad206944978e42a273c96f1, type: 3}
     - {fileID: 6446590382986153064, guid: 22338dd3d68e2a64ebd064323ecee85f, type: 3}
-    spawnCooldown: 0
+    spawnCooldown: 0.3
   - stateName: State 2
     enemyPrefabs:
     - {fileID: 1034603739179473230, guid: 66fd5b7456e1ac143bd5f6cf6d84dbb5, type: 3}

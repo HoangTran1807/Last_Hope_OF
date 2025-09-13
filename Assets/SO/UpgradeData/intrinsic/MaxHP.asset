@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: MaxHP
   m_EditorClassIdentifier: 
   upgradeName: Incre Health
-  description: 
+  description: in create healh and restore all healh
   category: 1
   maxLevel: 5
   icon: {fileID: -2892074164475661747, guid: 18cea50b2d0d76d49ae8f5388925a3ae, type: 3}
   upgradeType: 6
-  value: 0.1
+  value: 10

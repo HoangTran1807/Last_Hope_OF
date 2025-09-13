@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: UnlockRifle
   m_EditorClassIdentifier: 
   upgradeName: Rifle
-  description: "m\u1EDF kh\xF3a s\xFAng tr\u01B0\u1EDDng"
-  isWeaponUpgrade: 1
+  description: unlock rifle
+  category: 0
   maxLevel: 5
   icon: {fileID: 21300000, guid: 7c95719b98eebd24b887fc3f66686c83, type: 3}
   upgradeType: 0

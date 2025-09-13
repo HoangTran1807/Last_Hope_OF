@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Range
   m_EditorClassIdentifier: 
   upgradeName: FlameThrower
-  description: "C\u1ED9ng 1 t\u1EA7m b\u1EAFng"
-  isWeaponUpgrade: 1
+  description: 'add more range '
+  category: 0
   maxLevel: 5
   icon: {fileID: 21300000, guid: 545b2826a7860ca449eadfd921b99faf, type: 3}
   upgradeType: 5

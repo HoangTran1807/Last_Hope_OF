@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Damage
   m_EditorClassIdentifier: 
   upgradeName: Sniper
-  description: "T\u0103ng 50 s\xE1t th\u01B0\u01A1ng"
-  isWeaponUpgrade: 1
+  description: add ton of damage
+  category: 0
   maxLevel: 5
   icon: {fileID: 21300000, guid: 5d97986a7d2942842bcce910c9094ea0, type: 3}
   upgradeType: 0

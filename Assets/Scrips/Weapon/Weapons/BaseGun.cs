@@ -27,7 +27,7 @@ public class BaseGun : BaseWeapon
             bulletPrefab   = gunData.bulletPrefab;
             damage         = gunData.damage;
             bulletSpeed    = gunData.bulletSpeed;
-            cooldown       = gunData.cooldown;
+            rpm            = gunData.rpm;              // ✅ thay vì cooldown
             upgradeable    = gunData.upgradeable;
             bulletsPerShot = gunData.bulletsPerShot;
             spreadAngle    = gunData.spreadAngle;
@@ -38,7 +38,9 @@ public class BaseGun : BaseWeapon
             targetingStrategyID = gunData.targetingStrategyID;
             shotEffectName = gunData.shotSoundEffect;
         }
+        fireInterval = 60f / Mathf.Max(1, rpm);
     }
+
 
     private void Start()
     {
@@ -127,7 +129,13 @@ public class BaseGun : BaseWeapon
     // -------------------------
     public void UpgradeDamage(float amount) => damage += amount;
     public void UpgradeFireRate(float factor)
-    => cooldown = Mathf.Max(0.05f, cooldown / Mathf.Max(factor, 0.01f));
+    {
+        rpm = rpm + Mathf.RoundToInt(factor);
+
+        // cập nhật lại fireInterval
+        fireInterval = 60f / Mathf.Max(1, rpm);
+    }
+
     public void UpgradeAccuracy(float amount) => accuracy = Mathf.Clamp01(accuracy + amount);
 
     // -------------------------

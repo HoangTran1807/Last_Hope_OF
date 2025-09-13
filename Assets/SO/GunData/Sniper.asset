@@ -15,14 +15,14 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1884869061819339960, guid: 8915455ffe06a264380aeb5a77bc00d1, type: 3}
   bulletSpeed: 100
   damage: 100
-  attackRadius: 7
+  attackRadius: 11
   accuracy: 1
   maxLevel: 5
   weaponID: Sniper
   upgradeable:
   - {fileID: 11400000, guid: bb58310693f3ae74db947372f05ceac9, type: 2}
   - {fileID: 11400000, guid: df3af836637102b47bceb4dd98a01594, type: 2}
-  cooldown: 4
+  rpm: 60
   bulletsPerShot: 1
   spreadAngle: 10
   targetingStrategyID: 

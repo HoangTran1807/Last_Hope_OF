@@ -22,7 +22,14 @@ public class GameUI : MonoBehaviour
 
     private void Update()
     {
-        // tăng timer
+        // cập nhật exp bar
+        if (PlayerLevelSystem.Instance != null)
+        {
+            // currentExp / expToNextLevel sẽ cho ra tỉ lệ (0 -> 1)
+            expBar.value = (float)PlayerLevelSystem.Instance.currentExp
+                           / PlayerLevelSystem.Instance.expToNextLevel;
+        }
+
 
 
         // cập nhật HP bar

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -34,6 +36,8 @@ public class GameController : BaseManager<GameController>
 
         // Phát nhạc menu
         AudioManager.Instance.PlayRandomBGM(false);
+
+        PlayerLevelSystem.Instance.OnLevelUp += HandleLevelUp;
     }
 
     private void Update()
@@ -76,6 +80,13 @@ public class GameController : BaseManager<GameController>
         GUI.Label(rect, text, style);
     }
 
+
+    private void HandleLevelUp(int newLevel)
+    {
+        List<UpgradeData> upgrades = UpgradeManager.Instance.GetUpgradeChoices();
+        ShowUpgrade(upgrades);
+    }
+
     // ================== GAME FLOW ==================
 
     public void PlayGame()
@@ -105,12 +116,15 @@ public class GameController : BaseManager<GameController>
         ChangeState(GameState.Playing);
     }
 
-    public void ShowUpgrade()
+    public void ShowUpgrade(List<UpgradeData> upgrades)
     {
+        if (upgrades.Count == 0 || upgrades == null)
+            return;
         Debug.Log("Show upgrade panel!");
         ChangeState(GameState.Upgrade);
-        UpgradePanelController.Instance.ShowUpgradePanel();
+        UpgradePanelController.Instance.ShowUpgradePanel(upgrades);
     }
+
 
     public void OpenSetting()
     {

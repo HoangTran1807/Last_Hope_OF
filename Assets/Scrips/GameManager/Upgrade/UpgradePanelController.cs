@@ -9,9 +9,8 @@ public class UpgradePanelController : BaseManager<UpgradePanelController>
     /// <summary>
     /// Hiển thị panel upgrade và pause game
     /// </summary>
-    public void ShowUpgradePanel()
+    public void ShowUpgradePanel(List<UpgradeData> upgrades)
     {
-        var upgrades = UpgradeManager.Instance.GetUpgradeChoices();
         foreach (var upgrade in upgrades)
         {
             Debug.Log(upgrade.name);
@@ -26,10 +25,14 @@ public class UpgradePanelController : BaseManager<UpgradePanelController>
         }
     }
 
+    //private void OnBecameVisible()
+    //{
+    //    ShowUpgradePanel();
+    //}
+
     private void OnUpgradeSelected(UpgradeData data)
     {
         UpgradeManager.Instance.ApplyUpgrade(data);
-        panelUI.Hide();
         GameController.Instance.ResumeGame();
     }
 }

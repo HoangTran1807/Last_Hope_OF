@@ -1,14 +1,27 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
     private PlayerStats PlayerStats;
     private float immunityCouter;
+
     [SerializeField] private ParticleSystem hitEffect;
+    [SerializeField] private SpriteRenderer playerRenderer;
+    [SerializeField] private Collider2D playerCollider; // 👈 tham chiếu Collider
+
+    private Color originalColor;
+
+    private void Awake()
+    {
+        PlayerStats = GetComponent<PlayerStats>();
+        playerRenderer = GetComponent<SpriteRenderer>();
+        playerCollider = GetComponent<Collider2D>(); // lấy collider của Player
+    }
 
     void Start()
     {
-        PlayerStats = GetComponent<PlayerStats>();
+        if (playerRenderer != null)
+            originalColor = playerRenderer.color;
     }
 
     private void Update()
@@ -16,28 +29,53 @@ public class PlayerHealth : MonoBehaviour
         if (PlayerStats != null)
         {
             PlayerRegen();
-            if (immunityCouter >  0)
+
+            if (immunityCouter > 0)
             {
-                immunityCouter = immunityCouter - Time.deltaTime;
+                immunityCouter -= Time.deltaTime;
+
+                // hiệu ứng làm mờ (nhấp nháy alpha)
+                if (playerRenderer != null)
+                {
+                    float t = Mathf.PingPong(Time.time * 5f, 1f);
+                    Color c = originalColor;
+                    c.a = Mathf.Lerp(0.3f, 1f, t);
+                    playerRenderer.color = c;
+                }
+
+                // tắt collider trong lúc miễn nhiễm
+                if (playerCollider != null && playerCollider.enabled)
+                    playerCollider.enabled = false;
+            }
+            else
+            {
+                // hết miễn nhiễm -> trả lại màu gốc
+                if (playerRenderer != null)
+                    playerRenderer.color = originalColor;
+
+                // bật lại collider
+                if (playerCollider != null && !playerCollider.enabled)
+                    playerCollider.enabled = true;
             }
         }
     }
 
     public void TakeDamage(float damage)
     {
-        // n?u ng??i ch?i ?ang trong tr?ng th�i kh�ng s�t th??ng b? qua s�t th??ng l?n n�y 
         if (immunityCouter > 0)
         {
             Debug.Log("player ignore damage");
             return;
         }
 
-
+        AudioManager.Instance.PlaySE("playerHurt");
         damage = Mathf.Max(damage, 0f);
 
         PlayerStats.CurrentHealth -= damage;
-        hitEffect.Play();
-        
+
+        if (hitEffect != null)
+            hitEffect.Play();
+
         Debug.Log("Take damage");
         immunityCouter = PlayerStats.ImmunityTime;
 
@@ -64,6 +102,6 @@ public class PlayerHealth : MonoBehaviour
     public void Die()
     {
         Debug.Log("Player Died");
-        // n?u ng??i ch?i ch?t hi?n th? ui k?t qu? c?a game 
+        // show UI kết thúc game ở đây
     }
 }

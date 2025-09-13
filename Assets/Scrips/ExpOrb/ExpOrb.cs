@@ -69,6 +69,7 @@ public class EXPOrb : MonoBehaviour
         {
             other.GetComponent<PlayerLevelSystem>().AddExp(expAmount);
             OrbPool.Instance.ReturnOrb(gameObject);
+            AudioManager.Instance.PlaySE("pickOrb");
         }
     }
 

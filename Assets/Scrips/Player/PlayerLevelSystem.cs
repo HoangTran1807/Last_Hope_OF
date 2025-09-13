@@ -1,15 +1,24 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PlayerLevelSystem : MonoBehaviour
 {
+    public static PlayerLevelSystem Instance;
+
     public int level = 1;
     public int currentExp = 0;
     public int expToNextLevel = 100;
 
+    public delegate void LevelUpHandler(int newLevel);
+    public event LevelUpHandler OnLevelUp;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     public void AddExp(int amount)
     {
         currentExp += amount;
-        Debug.Log("EXP + " + amount + " | Total: " + currentExp);
 
         if (currentExp >= expToNextLevel)
         {
@@ -17,19 +26,12 @@ public class PlayerLevelSystem : MonoBehaviour
         }
     }
 
-
-    // kinh nghi?m c?n ?? lên c?p ti?p theo s? b?ng 120% c?p hi?n t?i 
-    void LevelUp()
+    private void LevelUp()
     {
         level++;
         currentExp -= expToNextLevel;
         expToNextLevel = Mathf.RoundToInt(expToNextLevel * 1.2f);
-        Debug.Log("Level Up! Current Level: " + level);
 
-        if (GameController.Instance != null)
-        {
-            GameController.Instance.ShowUpgrade();
-        }
-
+        OnLevelUp?.Invoke(level);
     }
 }

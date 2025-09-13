@@ -15,7 +15,7 @@ public class GunData : ScriptableObject
     public List<UpgradeData> upgradeable;
 
     [Header("Cooldown")]
-    public float cooldown = 0.5f;
+    public int rpm = 60;
 
     [Header("Multi Shot")]
     public int bulletsPerShot = 1;

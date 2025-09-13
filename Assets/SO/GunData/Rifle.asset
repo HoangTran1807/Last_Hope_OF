@@ -15,15 +15,15 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6474508735009773909, guid: 4bc5221e7aa9faf4ca08ce3ea2b8ee3a, type: 3}
   bulletSpeed: 10
   damage: 10
-  attackRadius: 10
+  attackRadius: 7
   accuracy: 1
   maxLevel: 5
   weaponID: Rifle
   upgradeable:
   - {fileID: 11400000, guid: 32e61dce1fc622d43abe2eaaef541be4, type: 2}
   - {fileID: 11400000, guid: 2195c8aae7b558045ae54a2a65c6ea59, type: 2}
-  cooldown: 0.4
+  rpm: 60
   bulletsPerShot: 1
   spreadAngle: 10
   targetingStrategyID: 
-  shotSoundEffect: rifleShot
+  shotSoundEffect: laser-gun-shot

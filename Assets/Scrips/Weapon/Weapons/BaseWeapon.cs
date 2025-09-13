@@ -7,25 +7,31 @@ public abstract class BaseWeapon : MonoBehaviour
     [SerializeField] protected string weaponID;
     [SerializeField] protected int currentLevel = 1;
     [SerializeField] protected int maxLevel = 5;
-    [SerializeField] protected float cooldown = 1f;
+
+    [Header("Firing Settings")]
+    [SerializeField] protected int rpm = 60; // số viên/phút
     [SerializeField] protected string shotEffectName;
+
     public List<UpgradeData> upgradeable; // danh sách nâng cấp của vũ khí này 
 
     protected float timer;
+    protected float fireInterval; // thời gian giữa 2 phát (giây)
 
     public string WeaponID => weaponID;
     public bool IsMaxLevel => currentLevel >= maxLevel;
+
 
     // -------------- UPDATE LOOP --------------
     public virtual void UpdateWeapon(Vector3 playerPos)
     {
         timer += Time.deltaTime;
-        if (timer >= cooldown)
+        if (timer >= fireInterval)
         {
             Fire(playerPos);
             timer = 0;
         }
     }
+
     // -------------- OBJECT POOLING (dùng chung) --------------
     protected GameObject SpawnFromPool(GameObject prefab, Vector3 position, Quaternion rotation)
     {
@@ -41,7 +47,6 @@ public abstract class BaseWeapon : MonoBehaviour
         obj.SetActive(true);
         return obj;
     }
-
 
     // Mỗi vũ khí tự define Fire()
     protected abstract void Fire(Vector3 playerPos);

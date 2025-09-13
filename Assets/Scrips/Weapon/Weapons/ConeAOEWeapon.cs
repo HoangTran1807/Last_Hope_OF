@@ -22,7 +22,7 @@ public class ConeAOEWeapon : BaseWeapon
     {
         if (weaponData != null)
         {
-            cooldown           = weaponData.cooldown;
+            rpm           = weaponData.rpm;
             upgradeable = weaponData.upgradeable;
             maxLevel           = weaponData.maxLevel;
             weaponID           = weaponData.weaponID;
@@ -40,6 +40,7 @@ public class ConeAOEWeapon : BaseWeapon
                 effectPrefab.Stop();
             }
         }
+        fireInterval = 60f / Mathf.Max(1, rpm);
     }
 
     private void Start()

@@ -28,23 +28,33 @@ public class OrbManager : MonoBehaviour
 
     void Update()
     {
-        // Nếu số lượng orb > 50 thì hút toàn bộ về player
-        if (player != null && orbs.Count > 50)
+        if (player == null) return;
+
+        // Kiểm tra từng orb
+        for (int i = 0; i < orbs.Count; i++)
         {
-            foreach (var orb in orbs)
+            EXPOrb orb = orbs[i];
+            if (orb == null) continue;
+
+            // Nếu số lượng orb > 50 thì hút toàn bộ
+            if (orbs.Count > 50)
             {
-                if (orb != null)
+                orb.isMoving = true;
+                orb.targetPlayer = player;
+            }
+            else
+            {
+                // Nếu orb cách player <= 3 thì hút
+                float dist = Vector2.Distance(orb.transform.position, player.position);
+                if (dist <= 3f)
                 {
                     orb.isMoving = true;
                     orb.targetPlayer = player;
                 }
             }
-        }
 
-        for (int i = 0; i < orbs.Count; i++)
-        {
-            EXPOrb orb = orbs[i];
-            if (orb != null && orb.isMoving && orb.targetPlayer != null)
+            // Di chuyển orb nếu đang hút
+            if (orb.isMoving && orb.targetPlayer != null)
             {
                 orb.transform.position = Vector2.MoveTowards(
                     orb.transform.position,
@@ -54,8 +64,10 @@ public class OrbManager : MonoBehaviour
             }
         }
 
+        // Kiểm tra gộp orb
         CheckOrbMerge();
     }
+
 
     public void CheckOrbMerge()
     {
